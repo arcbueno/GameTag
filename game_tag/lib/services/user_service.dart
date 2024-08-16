@@ -18,12 +18,10 @@ class UserService {
 
   Future<void> loginUser(User user) async {
     await _storageUser(user);
-    ServiceLocator.onLogin(user.sessionToken);
   }
 
   Future<void> loggoffUser() async {
     await _sharedPreferences.remove(Constants.userDataKey);
-    ServiceLocator.onLoggoff();
   }
 
   Future<void> _storageUser(User user) async {

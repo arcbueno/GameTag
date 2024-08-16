@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 class User {
+  final String objectId;
   final String email;
   final DateTime loginAt;
   final String username;
   final String sessionToken;
 
   User({
+    required this.objectId,
     required this.email,
     required this.loginAt,
     required this.username,
@@ -14,12 +16,14 @@ class User {
   });
 
   User copyWith({
+    String? objectId,
     String? email,
     DateTime? loginAt,
     String? username,
     String? sessionToken,
   }) {
     return User(
+      objectId: objectId ?? this.objectId,
       email: email ?? this.email,
       loginAt: loginAt ?? this.loginAt,
       username: username ?? this.username,
@@ -30,6 +34,7 @@ class User {
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
 
+    result.addAll({'objectId': objectId});
     result.addAll({'email': email});
     result.addAll({'loginAt': loginAt.millisecondsSinceEpoch});
     result.addAll({'username': username});
@@ -40,6 +45,7 @@ class User {
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
+      objectId: map['objectId'] ?? '',
       email: map['email'] ?? '',
       loginAt: DateTime.fromMillisecondsSinceEpoch(map['loginAt']),
       username: map['username'] ?? '',
@@ -50,28 +56,4 @@ class User {
   String toJson() => json.encode(toMap());
 
   factory User.fromJson(String source) => User.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'User(email: $email, loginAt: $loginAt, username: $username, sessionToken: $sessionToken)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is User &&
-        other.email == email &&
-        other.loginAt == loginAt &&
-        other.username == username &&
-        other.sessionToken == sessionToken;
-  }
-
-  @override
-  int get hashCode {
-    return email.hashCode ^
-        loginAt.hashCode ^
-        username.hashCode ^
-        sessionToken.hashCode;
-  }
 }

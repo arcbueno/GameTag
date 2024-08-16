@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: viewmodel.state,
-      builder: (context, state, child) {
+      builder: (context, state, _) {
         return Scaffold(
           body: Padding(
             padding: const EdgeInsets.all(24.0),

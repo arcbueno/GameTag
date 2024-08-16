@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_tag/pages/home/home_state.dart';
 import 'package:game_tag/pages/home/home_viewmodel.dart';
 import 'package:game_tag/pages/login/login_page.dart';
 import 'package:game_tag/utils/sized_box_extension.dart';
@@ -33,21 +34,51 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Icon(
-              Bootstrap.joystick,
-              size: 128,
+      body: ValueListenableBuilder(
+        valueListenable: _viewModel.state,
+        builder: (context, state, _) {
+          if (state is ErrorHomeState) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Icon(
+                      Bootstrap.joystick,
+                      size: 128,
+                    ),
+                    12.h,
+                    Text(
+                      state.errorMessage,
+                      style: const TextStyle(fontSize: 24),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+          if (state is SuccessHomeState) {
+            return ListView.builder(
+              itemCount: state.items.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(state.items[index].title),
+                );
+              },
+            );
+          }
+
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CircularProgressIndicator(),
+              ],
             ),
-            12.h,
-            const Text(
-              'Nenhum jogo registrado ainda!',
-              style: TextStyle(fontSize: 24),
-            ),
-          ],
-        ),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},

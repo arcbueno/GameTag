@@ -1,3 +1,4 @@
+import 'package:game_tag/repositories/games_repository.dart';
 import 'package:game_tag/services/login_service.dart';
 import 'package:game_tag/services/user_service.dart';
 import 'package:game_tag/utils/server_data.dart';
@@ -15,49 +16,29 @@ class ServiceLocator {
     var parse = await Parse().initialize(
       ServerData.keyApplicationId,
       ServerData.keyParseServerUrl,
+      masterKey: ServerData.keyMasterKey,
       clientKey: ServerData.keyClientKey,
       autoSendSessionId: true,
     );
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    _registerBlankGraphQLClient();
+    getIt.registerSingleton<GraphQLClient>(
+      GraphQLClient(
+        link: HttpLink(
+          '${ServerData.keyParseServerUrl}/graphql',
+          defaultHeaders: {
+            "X-Parse-Application-Id": ServerData.keyApplicationId,
+            "X-Parse-Client-Key": ServerData.keyClientKey,
+            "X-Parse-Master-Key": ServerData.keyMasterKey
+          },
+        ),
+        cache: GraphQLCache(),
+      ),
+    );
 
     getIt.registerSingleton(parse);
     getIt.registerSingleton(prefs);
     getIt.registerFactory<LoginService>(LoginService.new);
     getIt.registerFactory<UserService>(UserService.new);
-  }
-
-  static onLogin(String sessionId) {
-    if (getIt.isRegistered<GraphQLClient>()) {
-      getIt.unregister<GraphQLClient>();
-    }
-    getIt.registerSingleton<GraphQLClient>(
-      GraphQLClient(
-        link: HttpLink(ServerData.keyParseServerUrl, defaultHeaders: {
-          "X-Parse-Application-Id": "lNmkcXTVKDfoXOyGgAtg7gvGuG4Iv39LftvZDZKg",
-          "X-Parse-Master-Key": sessionId,
-          "X-Parse-Client-Key": "FSa3YYPyigFBhkkf2PPw6B0lsAoMakIA2hWxMXWL"
-        }),
-        cache: GraphQLCache(),
-      ),
-    );
-  }
-
-  static onLoggoff() {
-    _registerBlankGraphQLClient();
-  }
-
-  static _registerBlankGraphQLClient() {
-    if (getIt.isRegistered<GraphQLClient>()) {
-      getIt.unregister<GraphQLClient>();
-    }
-    getIt.registerSingleton<GraphQLClient>(
-      GraphQLClient(
-        link: HttpLink(
-          ServerData.keyParseServerUrl,
-        ),
-        cache: GraphQLCache(),
-      ),
-    );
+    getIt.registerFactory<GamesRepository>(GamesRepository.new);
   }
 }

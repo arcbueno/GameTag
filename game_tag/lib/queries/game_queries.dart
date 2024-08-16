@@ -1,5 +1,5 @@
 class GameQueries {
-  static const String getAllMyGames = r'''
+  static const String getAllMyGames = r"""
       query GetMyAllGames($id: ID!) {
         games(where: {
           CreatedBy: {
@@ -17,10 +17,9 @@ class GameQueries {
               Publisher,
               Rating,
               hoursPlayed,
-              
             }
           }
         }
     }
-  ''';
+  """;
 }

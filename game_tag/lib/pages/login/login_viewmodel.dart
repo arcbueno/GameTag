@@ -38,6 +38,7 @@ class LoginViewModel {
         return 'Login failed';
       }
       var user = User(
+        objectId: result.objectId ?? '',
         email: result.emailAddress ?? '',
         loginAt: DateTime.now(),
         username: result.username ?? '',
