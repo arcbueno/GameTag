@@ -34,7 +34,7 @@ class LoginViewModel {
       var result =
           await _loginService.loginWithEmailAndPassword(username, password);
       if (result == null) {
-        state.value = SignupFormState();
+        state.value = LoginFormState(errorMessage: 'Login failed');
         return 'Login failed';
       }
       var user = User(
@@ -43,7 +43,8 @@ class LoginViewModel {
         username: result.username ?? '',
         sessionToken: result.sessionToken ?? '',
       );
-      await _userService.storageUser(user);
+
+      await _userService.loginUser(user);
 
       state.value = LoginFormState();
     } catch (e) {
