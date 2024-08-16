@@ -37,8 +37,12 @@ class LoginViewModel {
         state.value = SignupFormState();
         return 'Login failed';
       }
-      var user =
-          User(email: result.emailAddress ?? '', loginAt: DateTime.now());
+      var user = User(
+        email: result.emailAddress ?? '',
+        loginAt: DateTime.now(),
+        username: result.username ?? '',
+        sessionToken: result.sessionToken ?? '',
+      );
       await _userService.storageUser(user);
 
       state.value = LoginFormState();
