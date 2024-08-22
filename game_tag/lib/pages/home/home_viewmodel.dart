@@ -22,7 +22,6 @@ class HomeViewModel {
       var result = await _gamesRepository.getAllMyGames();
       state.value = SuccessHomeState(result);
     } catch (e) {
-      print(e.toString());
       state.value = ErrorHomeState(e.toString());
     }
   }

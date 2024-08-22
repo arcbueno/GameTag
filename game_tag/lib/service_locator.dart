@@ -1,4 +1,6 @@
+import 'package:game_tag/repositories/game_state_repository.dart';
 import 'package:game_tag/repositories/games_repository.dart';
+import 'package:game_tag/repositories/platform_repository.dart';
 import 'package:game_tag/services/login_service.dart';
 import 'package:game_tag/services/user_service.dart';
 import 'package:game_tag/utils/server_data.dart';
@@ -31,6 +33,12 @@ class ServiceLocator {
             "X-Parse-Master-Key": ServerData.keyMasterKey
           },
         ),
+        defaultPolicies: DefaultPolicies(
+          query: Policies(
+            cacheReread: CacheRereadPolicy.ignoreAll,
+            fetch: FetchPolicy.noCache,
+          ),
+        ),
         cache: GraphQLCache(),
       ),
     );
@@ -40,5 +48,7 @@ class ServiceLocator {
     getIt.registerFactory<LoginService>(LoginService.new);
     getIt.registerFactory<UserService>(UserService.new);
     getIt.registerFactory<GamesRepository>(GamesRepository.new);
+    getIt.registerFactory<GameStateRepository>(GameStateRepository.new);
+    getIt.registerFactory<PlatformRepository>(PlatformRepository.new);
   }
 }

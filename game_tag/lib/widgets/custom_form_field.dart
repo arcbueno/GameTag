@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 class CustomFormField extends StatefulWidget {
   final String label;
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final bool isPassword;
   final String? Function(String?)? validator;
   final int? maxLength;
@@ -14,7 +14,7 @@ class CustomFormField extends StatefulWidget {
   const CustomFormField({
     super.key,
     required this.label,
-    required this.controller,
+    this.controller,
     this.isPassword = false,
     this.validator,
     this.maxLength,

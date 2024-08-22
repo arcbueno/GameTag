@@ -15,3 +15,21 @@ class NoGamesFoundException implements Exception {
     return message;
   }
 }
+
+class NoGameStateFoundException implements Exception {
+  final String message = 'No game states found';
+
+  @override
+  String toString() {
+    return message;
+  }
+}
+
+class NoPlatformFoundException implements Exception {
+  final String message = 'No plaftorms found';
+
+  @override
+  String toString() {
+    return message;
+  }
+}

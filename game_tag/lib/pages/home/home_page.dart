@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:game_tag/pages/home/home_state.dart';
 import 'package:game_tag/pages/home/home_viewmodel.dart';
 import 'package:game_tag/pages/login/login_page.dart';
+import 'package:game_tag/pages/new_game/new_game_page.dart';
 import 'package:game_tag/utils/sized_box_extension.dart';
 import 'package:icons_plus/icons_plus.dart';
 
@@ -81,7 +82,14 @@ class _HomePageState extends State<HomePage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context)
+              .push(
+                  MaterialPageRoute(builder: (context) => const NewGamePage()))
+              .then(
+                (_) => _viewModel.getMyGames(),
+              );
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
