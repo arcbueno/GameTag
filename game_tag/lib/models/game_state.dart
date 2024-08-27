@@ -1,7 +1,7 @@
 class GameState {
   final String id;
   final String name;
-  final GameStateType type;
+  final int type;
 
   GameState({
     required this.id,
@@ -13,27 +13,20 @@ class GameState {
     return GameState(
       id: map['objectId'] ?? '',
       name: map['name'] ?? '',
-      type: GameStateType.fromJson(map['type'] ?? -1),
+      type: map['type'] ?? 0,
     );
   }
-}
 
-enum GameStateType {
-  toPlay,
-  playing,
-  completed;
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode ^ type.hashCode;
 
-  const GameStateType();
-  factory GameStateType.fromJson(int data) {
-    switch (data) {
-      case 0:
-        return toPlay;
-      case 1:
-        return playing;
-      case 2:
-        return completed;
-      default:
-        return toPlay;
-    }
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is GameState &&
+        other.id == id &&
+        other.name == name &&
+        other.type == type;
   }
 }

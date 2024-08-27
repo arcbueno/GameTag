@@ -1,7 +1,7 @@
 class Platform {
   final String id;
   final String name;
-  final PlatformType type;
+  final int type;
 
   Platform({
     required this.id,
@@ -13,31 +13,20 @@ class Platform {
     return Platform(
       id: map['objectId'] ?? '',
       name: map['name'] ?? '',
-      type: PlatformType.fromJson(map['type'] ?? -1),
+      type: map['type'] ?? 0,
     );
   }
-}
 
-enum PlatformType {
-  xbox,
-  pc,
-  nintendo,
-  playstation;
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode ^ type.hashCode;
 
-  const PlatformType();
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
-  factory PlatformType.fromJson(int data) {
-    switch (data) {
-      case 0:
-        return xbox;
-      case 1:
-        return pc;
-      case 2:
-        return nintendo;
-      case 3:
-        return playstation;
-      default:
-        return pc;
-    }
+    return other is Platform &&
+        other.id == id &&
+        other.name == name &&
+        other.type == type;
   }
 }

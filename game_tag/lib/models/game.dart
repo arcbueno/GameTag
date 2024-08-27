@@ -1,15 +1,20 @@
 import 'package:game_tag/models/game_state.dart';
 import 'package:game_tag/models/platform.dart';
+import 'package:game_tag/utils/game_utils.dart';
 
 class Game {
+  final String id;
   final String title;
   final String? publisher;
   final double? rating;
-  final double? hoursPlayed;
+  final int? hoursPlayed;
   final Platform platform;
   final GameState state;
 
+  String get ratingReaction => GameUtils.getRatingReaction(rating);
+
   Game({
+    required this.id,
     required this.title,
     this.publisher,
     this.rating,
@@ -19,14 +24,16 @@ class Game {
   });
 
   Game copyWith({
+    String? id,
     String? title,
     String? publisher,
     double? rating,
-    double? hoursPlayed,
+    int? hoursPlayed,
     GameState? state,
     Platform? platform,
   }) {
     return Game(
+      id: id ?? this.id,
       title: title ?? this.title,
       publisher: publisher ?? this.publisher,
       rating: rating ?? this.rating,
@@ -36,33 +43,15 @@ class Game {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    final result = <String, dynamic>{};
-
-    result.addAll({'title': title});
-    if (publisher != null) {
-      result.addAll({'publisher': publisher});
-    }
-    if (rating != null) {
-      result.addAll({'rating': rating});
-    }
-    if (hoursPlayed != null) {
-      result.addAll({'hoursPlayed': hoursPlayed});
-    }
-    result.addAll({'state': state.id});
-    result.addAll({'platform': platform.id});
-
-    return result;
-  }
-
   factory Game.fromMap(Map<String, dynamic> map) {
     return Game(
+      id: map['objectId'] ?? '',
       title: map['Title'] ?? '',
       publisher: map['Publisher'],
       rating: map['Rating']?.toDouble(),
       hoursPlayed: map['HoursPlayed']?.toDouble(),
-      platform: Platform.fromMap(map['Platform']['edges'][0]['node']),
-      state: GameState.fromMap(map['State']['edges'][0]['node']),
+      platform: Platform.fromMap(map['Platform']),
+      state: GameState.fromMap(map['State']),
     );
   }
 }

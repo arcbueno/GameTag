@@ -36,7 +36,7 @@ class GamesRepository {
     return list;
   }
 
-  Future<void> createGame(String title, String? publisher, double? hoursPlayed,
+  Future<void> createGame(String title, String? publisher, int hoursPlayed,
       double? rating, GameState gameState, Platform platform) async {
     var user = _userService.getLoggedUser();
     if (user == null) {
@@ -52,6 +52,62 @@ class GamesRepository {
         "userId": user.objectId,
         "gameStateId": gameState.id,
         "platformId": platform.id,
+      },
+    );
+    var result = await _client.query(query);
+    if (result.hasException) {
+      throw result.exception!;
+    }
+  }
+
+  Future<void> updateGame(Game game) async {
+    var user = _userService.getLoggedUser();
+    if (user == null) {
+      throw UserNotLoggedInException();
+    }
+    var query = QueryOptions(
+      document: gql(GameQueries.updateGame),
+      variables: {
+        "id": game.id,
+        "title": game.title,
+        "publisher": game.publisher,
+        "hoursPlayed": game.hoursPlayed,
+        "rating": game.rating,
+        "userId": user.objectId,
+        "gameStateId": game.state.id,
+        "platformId": game.platform.id,
+      },
+    );
+    var result = await _client.query(query);
+    if (result.hasException) {
+      throw result.exception!;
+    }
+  }
+
+  Future<void> updateHoursPlayed(Game game) {
+    var user = _userService.getLoggedUser();
+    if (user == null) {
+      throw UserNotLoggedInException();
+    }
+    var query = QueryOptions(
+      document: gql(GameQueries.updateHoursPlayed),
+      variables: {
+        "id": game.id,
+        "hoursPlayed": game.hoursPlayed,
+      },
+    );
+    return _client.query(query);
+  }
+
+  Future<void> deleteGame(Game game) async {
+    var user = _userService.getLoggedUser();
+    if (user == null) {
+      throw UserNotLoggedInException();
+    }
+    var query = QueryOptions(
+      document: gql(GameQueries.updateGame),
+      variables: {
+        "id": game.id,
       },
     );
     var result = await _client.query(query);

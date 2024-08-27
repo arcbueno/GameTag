@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_tag/pages/game_detail/game_detail_page.dart';
 import 'package:game_tag/pages/home/home_state.dart';
 import 'package:game_tag/pages/home/home_viewmodel.dart';
 import 'package:game_tag/pages/login/login_page.dart';
@@ -66,6 +67,15 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (context, index) {
                 return ListTile(
                   title: Text(state.items[index].title),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => GameDetailPage(
+                          game: state.items[index],
+                        ),
+                      ),
+                    );
+                  },
                 );
               },
             );
@@ -90,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                 (_) => _viewModel.getMyGames(),
               );
         },
-        tooltip: 'Increment',
+        tooltip: 'Create new game',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );

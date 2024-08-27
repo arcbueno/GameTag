@@ -59,7 +59,7 @@ class NewGameViewModel {
     });
   }
 
-  Future<bool> createGame(String title, String? publisher, double? hoursPlayed,
+  Future<bool> createGame(String title, String? publisher, int hoursPlayed,
       double? rating, GameState gameState, Platform platform) async {
     if (state.value is! FillingState) return false;
     state.value = (state.value as FillingState).copyWith(isLoading: true);
