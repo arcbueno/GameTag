@@ -1,11 +1,13 @@
 import 'package:game_tag/repositories/game_state_repository.dart';
 import 'package:game_tag/repositories/games_repository.dart';
 import 'package:game_tag/repositories/platform_repository.dart';
+import 'package:game_tag/services/file_service.dart';
 import 'package:game_tag/services/login_service.dart';
 import 'package:game_tag/services/user_service.dart';
 import 'package:game_tag/utils/server_data.dart';
 import 'package:get_it/get_it.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,6 +47,8 @@ class ServiceLocator {
 
     getIt.registerSingleton(parse);
     getIt.registerSingleton(prefs);
+    getIt.registerFactory<ImagePicker>(ImagePicker.new);
+    getIt.registerFactory<FileService>(FileService.new);
     getIt.registerFactory<LoginService>(LoginService.new);
     getIt.registerFactory<UserService>(UserService.new);
     getIt.registerFactory<GamesRepository>(GamesRepository.new);

@@ -31,7 +31,6 @@ class HomeViewModel {
       await _userService.loggoffUser();
       return true;
     } catch (e) {
-      print(e.toString());
       return false;
     }
   }

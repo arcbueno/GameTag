@@ -1,6 +1,7 @@
 import 'package:game_tag/models/game.dart';
 import 'package:game_tag/models/game_state.dart';
 import 'package:game_tag/models/platform.dart';
+import 'package:image_picker/image_picker.dart';
 
 sealed class GameDetailState {
   final Game? game;
@@ -23,12 +24,15 @@ class GameDetailStateFilling extends GameDetailState {
   final List<GameState> gamesStates;
   final List<Platform> platforms;
   final bool isLoading;
+  final List<XFile> tempImages;
+
   GameDetailStateFilling(
     super.game, {
     required this.gamesStates,
     required this.platforms,
     this.error,
     this.isLoading = false,
+    this.tempImages = const [],
   }) : super._();
 
   GameDetailStateFilling copyWith({
@@ -37,6 +41,7 @@ class GameDetailStateFilling extends GameDetailState {
     List<GameState>? gamesStates,
     List<Platform>? platforms,
     bool? isLoading,
+    List<XFile>? tempImages,
   }) {
     return GameDetailStateFilling(
       game ?? this.game,
@@ -44,6 +49,7 @@ class GameDetailStateFilling extends GameDetailState {
       platforms: platforms ?? this.platforms,
       error: error ?? this.error,
       isLoading: isLoading ?? this.isLoading,
+      tempImages: tempImages ?? this.tempImages,
     );
   }
 }

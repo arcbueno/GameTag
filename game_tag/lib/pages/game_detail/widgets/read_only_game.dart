@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:game_tag/models/game.dart';
+import 'package:game_tag/pages/game_detail/game_detail_viewmodel.dart';
+import 'package:game_tag/pages/game_detail/widgets/screenshot_list.dart';
 import 'package:game_tag/utils/sized_box_extension.dart';
 
 class ReadOnlyGame extends StatelessWidget {
   final Game game;
-  const ReadOnlyGame({super.key, required this.game});
+  final GameDetailViewmodel viewmodel;
+  const ReadOnlyGame({super.key, required this.game, required this.viewmodel});
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +76,12 @@ class ReadOnlyGame extends StatelessWidget {
                       Text(game.ratingReaction),
                     ],
                   ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ScreenshotList(
+                    viewmodel: viewmodel,
+                  ),
+                ),
               ],
             ),
           ),

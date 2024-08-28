@@ -10,6 +10,7 @@ class Game {
   final int? hoursPlayed;
   final Platform platform;
   final GameState state;
+  final List<String> screenshots;
 
   String get ratingReaction => GameUtils.getRatingReaction(rating);
 
@@ -21,6 +22,7 @@ class Game {
     this.hoursPlayed,
     required this.state,
     required this.platform,
+    this.screenshots = const [],
   });
 
   Game copyWith({
@@ -31,6 +33,7 @@ class Game {
     int? hoursPlayed,
     GameState? state,
     Platform? platform,
+    List<String>? screenshots,
   }) {
     return Game(
       id: id ?? this.id,
@@ -40,6 +43,7 @@ class Game {
       hoursPlayed: hoursPlayed ?? this.hoursPlayed,
       state: state ?? this.state,
       platform: platform ?? this.platform,
+      screenshots: screenshots ?? this.screenshots,
     );
   }
 
@@ -49,9 +53,10 @@ class Game {
       title: map['Title'] ?? '',
       publisher: map['Publisher'],
       rating: map['Rating']?.toDouble(),
-      hoursPlayed: map['HoursPlayed']?.toDouble(),
+      hoursPlayed: map['hoursPlayed']?.toInt(),
       platform: Platform.fromMap(map['Platform']),
       state: GameState.fromMap(map['State']),
+      screenshots: List<String>.from(map['Screenshots'] ?? []),
     );
   }
 }

@@ -62,22 +62,29 @@ class _HomePageState extends State<HomePage> {
             );
           }
           if (state is SuccessHomeState) {
-            return ListView.builder(
-              itemCount: state.items.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(state.items[index].title),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => GameDetailPage(
-                          game: state.items[index],
-                        ),
-                      ),
+            return Column(
+              children: [
+                ListView.builder(
+                  itemCount: state.items.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(state.items[index].title),
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(
+                              MaterialPageRoute(
+                                builder: (context) => GameDetailPage(
+                                  game: state.items[index],
+                                ),
+                              ),
+                            )
+                            .then((_) => _viewModel.getMyGames());
+                      },
                     );
                   },
-                );
-              },
+                ),
+              ],
             );
           }
 

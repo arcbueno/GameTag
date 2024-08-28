@@ -69,7 +69,8 @@ class NewGameViewModel {
       return true;
     }).catchError((error) {
       state.value = state.value is FillingState
-          ? (state.value as FillingState).copyWith(error: error.toString())
+          ? (state.value as FillingState)
+              .copyWith(error: error.toString(), isLoading: false)
           : ErrorState(error.toString());
       return false;
     });

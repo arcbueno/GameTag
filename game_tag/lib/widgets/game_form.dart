@@ -23,6 +23,7 @@ class GameForm extends StatelessWidget {
   final Function() onSave;
   final String saveButtonText;
   final int? hoursPlayed;
+  final Widget? screenshotWidget;
 
   const GameForm({
     super.key,
@@ -41,6 +42,7 @@ class GameForm extends StatelessWidget {
     required this.saveButtonText,
     this.error,
     this.hoursPlayed,
+    this.screenshotWidget,
   });
 
   @override
@@ -49,6 +51,7 @@ class GameForm extends StatelessWidget {
       children: [
         Expanded(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomFormField(
                 label: 'Game title',
@@ -167,6 +170,7 @@ class GameForm extends StatelessWidget {
                   ),
                 ],
               ),
+              if (screenshotWidget != null) screenshotWidget!,
               if (error != null) ...[
                 24.h,
                 SizedBox(

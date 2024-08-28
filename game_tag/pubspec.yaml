@@ -15,6 +15,9 @@ dependencies:
   shared_preferences: ^2.2.3
   icons_plus: ^5.0.0
   graphql_flutter: ^5.1.2
+  image_picker: ^1.1.2
+  uuid: 
+  photo_view: ^0.15.0
 
 
   # The following adds the Cupertino Icons font to your application.

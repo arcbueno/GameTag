@@ -17,7 +17,7 @@ class GameQueries {
   """;
 
   static const String updateGame = r"""
-    mutation UpdateGame($id: ID!, $title: String!, $publisher: String, $hoursPlayed: Float, $rating: Float, $gameStateId: ID!, $platformId: ID! ) {
+    mutation UpdateGame($id: ID!, $title: String!, $publisher: String, $hoursPlayed: Float, $rating: Float, $gameStateId: ID!, $platformId: ID!, $screenshotList: [Any] ) {
       updateGame(
         input: {
           id: $id 
@@ -27,7 +27,10 @@ class GameQueries {
             hoursPlayed: $hoursPlayed, 
             Rating: $rating,
             State:{link:$gameStateId}, 
-            Platform: {link: $platformId }}}
+            Platform: {link: $platformId }
+            Screenshots: $screenshotList
+          }
+        }
       ) {
         game {
           id

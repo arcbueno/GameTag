@@ -7,11 +7,14 @@ import 'package:game_tag/repositories/game_state_repository.dart';
 import 'package:game_tag/repositories/games_repository.dart';
 import 'package:game_tag/repositories/platform_repository.dart';
 import 'package:game_tag/service_locator.dart';
+import 'package:game_tag/services/file_service.dart';
+import 'package:image_picker/image_picker.dart';
 
 class GameDetailViewmodel {
   final GamesRepository _gamesRepository;
   final GameStateRepository _gameStateRepository;
   final PlatformRepository _platformRepository;
+  final FileService _fileService;
 
   ValueNotifier<GameDetailState> state =
       ValueNotifier<GameDetailState>(GameDetailStateReadOnly(null));
@@ -21,12 +24,22 @@ class GameDetailViewmodel {
     GamesRepository? gamesRepository,
     GameStateRepository? gameStateRepository,
     PlatformRepository? platformRepository,
+    FileService? fileService,
   ])  : _gamesRepository = gamesRepository ?? getIt.get<GamesRepository>(),
         _gameStateRepository =
             gameStateRepository ?? getIt.get<GameStateRepository>(),
         _platformRepository =
-            platformRepository ?? getIt.get<PlatformRepository>() {
+            platformRepository ?? getIt.get<PlatformRepository>(),
+        _fileService = fileService ?? getIt.get<FileService>() {
     state.value = GameDetailStateReadOnly(game);
+  }
+
+  onSelectImages() async {
+    var images = await _fileService.getImages();
+    if (images.isEmpty) return;
+    state.value = (state.value as GameDetailStateFilling).copyWith(
+      tempImages: (state.value as GameDetailStateFilling).tempImages + images,
+    );
   }
 
   Future<bool> deleteGame() async {
@@ -75,13 +88,21 @@ class GameDetailViewmodel {
       isLoading: true,
     );
     try {
-      await _gamesRepository.updateGame(state.value.game!);
-      state.value = GameDetailStateReadOnly(state.value.game);
+      var filesNames = await _uploadImages();
+      game.screenshots.addAll(filesNames);
+      await _gamesRepository.updateGame(game);
+      state.value = GameDetailStateReadOnly(game);
       return true;
     } catch (e) {
-      state.value = GameDetailStateError(state.value.game, e.toString());
+      state.value = GameDetailStateError(game, e.toString());
       return false;
     }
+  }
+
+  Future<List<String>> _uploadImages() async {
+    if ((state.value as GameDetailStateFilling).tempImages.isEmpty) return [];
+    return await _fileService.uploadImages(
+        (state.value as GameDetailStateFilling).tempImages, state.value.game!);
   }
 
   selectRating(double rating) {
@@ -113,5 +134,15 @@ class GameDetailViewmodel {
       return 'Hours played cannot be negative';
     }
     return null;
+  }
+
+  void onDeleteTempImage(XFile e) {
+    (state.value as GameDetailStateFilling).tempImages.remove(e);
+    state.value = (state.value as GameDetailStateFilling).copyWith();
+  }
+
+  void onDeleteImage(String e) {
+    (state.value as GameDetailStateFilling).game!.screenshots.remove(e);
+    state.value = (state.value as GameDetailStateFilling).copyWith();
   }
 }

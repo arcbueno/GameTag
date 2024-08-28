@@ -50,7 +50,7 @@ class GamesRepository {
         "hoursPlayed": hoursPlayed,
         "rating": rating,
         "userId": user.objectId,
-        "gameStateId": gameState.id,
+        "stateId": gameState.id,
         "platformId": platform.id,
       },
     );
@@ -76,6 +76,7 @@ class GamesRepository {
         "userId": user.objectId,
         "gameStateId": game.state.id,
         "platformId": game.platform.id,
+        "screenshotList": game.screenshots
       },
     );
     var result = await _client.query(query);

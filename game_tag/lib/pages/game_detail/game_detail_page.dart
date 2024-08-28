@@ -5,6 +5,7 @@ import 'package:game_tag/models/platform.dart';
 import 'package:game_tag/pages/game_detail/game_detail_state.dart';
 import 'package:game_tag/pages/game_detail/game_detail_viewmodel.dart';
 import 'package:game_tag/pages/game_detail/widgets/read_only_game.dart';
+import 'package:game_tag/pages/game_detail/widgets/screenshot_list.dart';
 import 'package:game_tag/widgets/game_form.dart';
 
 class GameDetailPage extends StatefulWidget {
@@ -84,6 +85,7 @@ class _GameDetailPageState extends State<GameDetailPage> {
                 if (state is GameDetailStateReadOnly) {
                   return ReadOnlyGame(
                     game: state.game!,
+                    viewmodel: _viewModel,
                   );
                 }
                 if (state is GameDetailStateFilling) {
@@ -125,10 +127,17 @@ class _GameDetailPageState extends State<GameDetailPage> {
                             publisherController.text, hoursPlayed);
                       },
                       saveButtonText: 'Update game',
+                      screenshotWidget: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ScreenshotList(
+                          viewmodel: _viewModel,
+                        ),
+                      ),
                     ),
                   );
                 }
-                if (state is GameDetailStateLoading) {
+                if (state is GameDetailStateLoading ||
+                    (state is GameDetailStateFilling && state.isLoading)) {
                   return const Center(child: CircularProgressIndicator());
                 }
                 return Container();
