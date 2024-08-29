@@ -69,20 +69,14 @@ class GameQueries {
 
   static const String deleteGame = r"""
     mutation DeleteGame($id: ID!) {
-      updateGame(
+      deleteGame(
         input: {id: $id}
       ) {
         game {
           id
           Title
           createdAt
-          CreatedBy {
-            edges {
-              node {
-                email
-              }
-            }
-          }
+          
         }
       }
     }

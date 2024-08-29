@@ -84,7 +84,7 @@ class _GameDetailPageState extends State<GameDetailPage> {
               builder: (context) {
                 if (state is GameDetailStateReadOnly) {
                   return ReadOnlyGame(
-                    game: state.game!,
+                    game: state.game,
                     viewmodel: _viewModel,
                   );
                 }

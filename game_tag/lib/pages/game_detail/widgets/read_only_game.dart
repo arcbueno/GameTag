@@ -5,12 +5,17 @@ import 'package:game_tag/pages/game_detail/widgets/screenshot_list.dart';
 import 'package:game_tag/utils/sized_box_extension.dart';
 
 class ReadOnlyGame extends StatelessWidget {
-  final Game game;
+  final Game? game;
   final GameDetailViewmodel viewmodel;
   const ReadOnlyGame({super.key, required this.game, required this.viewmodel});
 
   @override
   Widget build(BuildContext context) {
+    if (game == null) {
+      return const Center(
+        child: Text('No game selected'),
+      );
+    }
     return Column(
       children: <Widget>[
         Expanded(
@@ -20,7 +25,7 @@ class ReadOnlyGame extends StatelessWidget {
               children: [
                 12.h,
                 Text(
-                  'Publisher: ${game.publisher}',
+                  'Publisher: ${game!.publisher}',
                   style: const TextStyle(fontSize: 18),
                 ),
                 12.h,
@@ -28,13 +33,13 @@ class ReadOnlyGame extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        'Platform: ${game.platform.name}',
+                        'Platform: ${game!.platform.name}',
                         style: const TextStyle(fontSize: 18),
                       ),
                     ),
                     Expanded(
                       child: Text(
-                        'State: ${game.state.name}',
+                        'State: ${game!.state.name}',
                         style: const TextStyle(fontSize: 18),
                       ),
                     ),
@@ -45,27 +50,27 @@ class ReadOnlyGame extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        'Hours played: ${game.hoursPlayed ?? ''}',
+                        'Hours played: ${game!.hoursPlayed ?? ''}',
                         style: const TextStyle(fontSize: 18),
                       ),
                     ),
                   ],
                 ),
                 24.h,
-                if (game.rating != null)
+                if (game!.rating != null)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          for (var i = 0; i < game.rating!.truncate(); i++)
+                          for (var i = 0; i < game!.rating!.truncate(); i++)
                             const Icon(
                               Icons.star,
                               color: Colors.black,
                               size: 36,
                             ),
-                          if (game.rating! % 1 > 0)
+                          if (game!.rating! % 1 > 0)
                             const Icon(
                               Icons.star_half,
                               color: Colors.black,
@@ -73,7 +78,7 @@ class ReadOnlyGame extends StatelessWidget {
                             ),
                         ],
                       ),
-                      Text(game.ratingReaction),
+                      Text(game!.ratingReaction),
                     ],
                   ),
                 Padding(

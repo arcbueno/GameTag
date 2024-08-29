@@ -106,7 +106,7 @@ class GamesRepository {
       throw UserNotLoggedInException();
     }
     var query = QueryOptions(
-      document: gql(GameQueries.updateGame),
+      document: gql(GameQueries.deleteGame),
       variables: {
         "id": game.id,
       },
