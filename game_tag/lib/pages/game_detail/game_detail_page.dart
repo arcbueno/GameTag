@@ -80,68 +80,72 @@ class _GameDetailPageState extends State<GameDetailPage> {
                 ),
               ],
             ),
-            body: Builder(
-              builder: (context) {
-                if (state is GameDetailStateReadOnly) {
-                  return ReadOnlyGame(
-                    game: state.game,
-                    viewmodel: _viewModel,
-                  );
-                }
-                if (state is GameDetailStateFilling) {
-                  return Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: GameForm(
-                      titleController: titleController,
-                      publisherController: publisherController,
-                      currentRating: state.game?.rating,
-                      onHoursPlayedChanged: (value) {
-                        hoursPlayed = int.tryParse(value ?? '');
-                      },
-                      onRatingChanged: _viewModel.selectRating,
-                      onPlatformSelected: _viewModel.selectPlatform,
-                      onGameStateSelected: _viewModel.selectGameState,
-                      gameStates: state.gamesStates,
-                      platforms: state.platforms,
-                      platformSelected: state.game?.platform,
-                      gameStateSelected: state.game?.state,
-                      error: state.error,
-                      hoursPlayed: hoursPlayed,
-                      onSave: () async {
-                        var error = _viewModel.validate(
-                          titleController.text,
-                          publisherController.text.isEmpty
-                              ? null
-                              : publisherController.text,
-                          hoursPlayed,
-                        );
-                        if (error != null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(error),
+            body: Stack(
+              children: [
+                Builder(
+                  builder: (context) {
+                    if (state is GameDetailStateReadOnly) {
+                      return ReadOnlyGame(
+                        game: state.game,
+                        viewmodel: _viewModel,
+                      );
+                    }
+                    if (state is GameDetailStateFilling) {
+                      return Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: GameForm(
+                          titleController: titleController,
+                          publisherController: publisherController,
+                          currentRating: state.game?.rating,
+                          onHoursPlayedChanged: (value) {
+                            hoursPlayed = int.tryParse(value ?? '');
+                          },
+                          onRatingChanged: _viewModel.selectRating,
+                          onPlatformSelected: _viewModel.selectPlatform,
+                          onGameStateSelected: _viewModel.selectGameState,
+                          gameStates: state.gamesStates,
+                          platforms: state.platforms,
+                          platformSelected: state.game?.platform,
+                          gameStateSelected: state.game?.state,
+                          error: state.error,
+                          hoursPlayed: hoursPlayed,
+                          onSave: () async {
+                            var error = _viewModel.validate(
+                              titleController.text,
+                              publisherController.text.isEmpty
+                                  ? null
+                                  : publisherController.text,
+                              hoursPlayed,
+                            );
+                            if (error != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(error),
+                                ),
+                              );
+                              return;
+                            }
+                            _viewModel.updateGame(titleController.text,
+                                publisherController.text, hoursPlayed);
+                          },
+                          saveButtonText: 'Update game',
+                          screenshotWidget: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ScreenshotList(
+                              viewmodel: _viewModel,
                             ),
-                          );
-                          return;
-                        }
-                        _viewModel.updateGame(titleController.text,
-                            publisherController.text, hoursPlayed);
-                      },
-                      saveButtonText: 'Update game',
-                      screenshotWidget: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ScreenshotList(
-                          viewmodel: _viewModel,
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                }
+                      );
+                    }
+
+                    return Container();
+                  },
+                ),
                 if (state is GameDetailStateLoading ||
-                    (state is GameDetailStateFilling && state.isLoading)) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return Container();
-              },
+                    (state is GameDetailStateFilling && state.isLoading))
+                  const Center(child: CircularProgressIndicator())
+              ],
             ),
           ),
         );

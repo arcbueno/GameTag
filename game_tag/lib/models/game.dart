@@ -10,7 +10,7 @@ class Game {
   final int? hoursPlayed;
   final Platform platform;
   final GameState state;
-  final List<String> screenshots;
+  final List<Screenshot> screenshots;
 
   String get ratingReaction => GameUtils.getRatingReaction(rating);
 
@@ -33,7 +33,7 @@ class Game {
     int? hoursPlayed,
     GameState? state,
     Platform? platform,
-    List<String>? screenshots,
+    List<Screenshot>? screenshots,
   }) {
     return Game(
       id: id ?? this.id,
@@ -56,7 +56,27 @@ class Game {
       hoursPlayed: map['hoursPlayed']?.toInt(),
       platform: Platform.fromMap(map['Platform']),
       state: GameState.fromMap(map['State']),
-      screenshots: List<String>.from(map['Screenshots'] ?? []),
+      screenshots: (map['Screenshots'] as Map)['edges']
+              .map<Screenshot>((e) => Screenshot.fromMap(e['node']))
+              .toList() ??
+          [],
+    );
+  }
+}
+
+class Screenshot {
+  final String id;
+  final String url;
+
+  Screenshot({
+    required this.id,
+    required this.url,
+  });
+
+  factory Screenshot.fromMap(Map<String, dynamic> map) {
+    return Screenshot(
+      id: map['objectId'] ?? '',
+      url: map['url'] ?? '',
     );
   }
 }

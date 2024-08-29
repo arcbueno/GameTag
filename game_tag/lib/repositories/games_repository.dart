@@ -60,23 +60,49 @@ class GamesRepository {
     }
   }
 
-  Future<void> updateGame(Game game) async {
+  Future<void> updateGame(Game game, List<Screenshot> removeScreenshots) async {
     var user = _userService.getLoggedUser();
     if (user == null) {
       throw UserNotLoggedInException();
     }
+
+    if (removeScreenshots.isNotEmpty) {
+      await _removeScreenshots(game, removeScreenshots);
+    }
+
     var query = QueryOptions(
-      document: gql(GameQueries.updateGame),
+      document: gql(game.screenshots.isEmpty
+          ? GameQueries.updateGame
+          : GameQueries.updateGameWithScreenshots),
       variables: {
         "id": game.id,
         "title": game.title,
         "publisher": game.publisher,
         "hoursPlayed": game.hoursPlayed,
         "rating": game.rating,
-        "userId": user.objectId,
         "gameStateId": game.state.id,
         "platformId": game.platform.id,
-        "screenshotList": game.screenshots
+        "screenshots": game.screenshots.map((e) => e.id).toList(),
+      },
+    );
+    var result = await _client.query(query);
+    if (result.hasException) {
+      throw result.exception!;
+    }
+  }
+
+  Future<void> _removeScreenshots(
+      Game game, List<Screenshot> removeScreenshots) async {
+    var user = _userService.getLoggedUser();
+    if (user == null) {
+      throw UserNotLoggedInException();
+    }
+
+    var query = QueryOptions(
+      document: gql(GameQueries.removeScreenshot),
+      variables: {
+        "id": game.id,
+        "screenshotsToRemove": removeScreenshots.map((e) => e.id).toList()
       },
     );
     var result = await _client.query(query);

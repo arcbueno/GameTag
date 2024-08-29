@@ -4,6 +4,7 @@ import 'package:game_tag/pages/game_detail/game_detail_viewmodel.dart';
 import 'package:game_tag/pages/game_detail/widgets/empty_screenshot_card.dart';
 import 'package:game_tag/pages/game_detail/widgets/game_screenshot_card.dart';
 import 'package:game_tag/pages/image_page/image_page.dart';
+import 'package:game_tag/utils/sized_box_extension.dart';
 
 class ScreenshotList extends StatelessWidget {
   final GameDetailViewmodel viewmodel;
@@ -20,6 +21,28 @@ class ScreenshotList extends StatelessWidget {
           'Screenshots',
           style: Theme.of(context).textTheme.headlineSmall,
         ),
+        if (!isEditing && viewmodel.state.value.game!.screenshots.isEmpty)
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: SizedBox(
+              width: MediaQuery.sizeOf(context).width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Icon(
+                    Icons.image_not_supported_rounded,
+                    size: 128,
+                  ),
+                  12.h,
+                  const Text(
+                    'No screenshots added',
+                    style: TextStyle(fontSize: 24),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          ),
         SizedBox(
           width: MediaQuery.sizeOf(context).width,
           child: SingleChildScrollView(
@@ -32,20 +55,20 @@ class ScreenshotList extends StatelessWidget {
                     child: GameScreenshotCard(
                       onDelete: isEditing
                           ? () {
-                              viewmodel.onDeleteImage(e);
+                              viewmodel.onDeleteImage(e.id);
                             }
                           : null,
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => ImagePage(
-                              imagePath: e,
+                              imagePath: e.url,
                               isFromMemory: false,
                             ),
                           ),
                         );
                       },
-                      imagePath: e,
+                      imagePath: e.url,
                     ),
                   );
                 }),

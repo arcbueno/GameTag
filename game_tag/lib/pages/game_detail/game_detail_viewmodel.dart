@@ -15,6 +15,7 @@ class GameDetailViewmodel {
   final GameStateRepository _gameStateRepository;
   final PlatformRepository _platformRepository;
   final FileService _fileService;
+  final List<Screenshot> screenshotsToRemove = [];
 
   ValueNotifier<GameDetailState> state =
       ValueNotifier<GameDetailState>(GameDetailStateReadOnly(null));
@@ -88,9 +89,11 @@ class GameDetailViewmodel {
       isLoading: true,
     );
     try {
-      var filesNames = await _uploadImages();
-      game.screenshots.addAll(filesNames);
-      await _gamesRepository.updateGame(game);
+      var screenshots = await _uploadImages();
+      var currentScreenshots = [...game.screenshots];
+      currentScreenshots.addAll(screenshots);
+      game = game.copyWith(screenshots: currentScreenshots);
+      await _gamesRepository.updateGame(game, screenshotsToRemove);
       state.value = GameDetailStateReadOnly(game);
       return true;
     } catch (e) {
@@ -99,7 +102,7 @@ class GameDetailViewmodel {
     }
   }
 
-  Future<List<String>> _uploadImages() async {
+  Future<List<Screenshot>> _uploadImages() async {
     if ((state.value as GameDetailStateFilling).tempImages.isEmpty) return [];
     return await _fileService.uploadImages(
         (state.value as GameDetailStateFilling).tempImages, state.value.game!);
@@ -141,8 +144,13 @@ class GameDetailViewmodel {
     state.value = (state.value as GameDetailStateFilling).copyWith();
   }
 
-  void onDeleteImage(String e) {
-    (state.value as GameDetailStateFilling).game!.screenshots.remove(e);
+  void onDeleteImage(String id) {
+    screenshotsToRemove.add(state.value.game!.screenshots
+        .firstWhere((element) => element.id == id));
+    (state.value as GameDetailStateFilling)
+        .game!
+        .screenshots
+        .removeWhere((e) => e.id == id);
     state.value = (state.value as GameDetailStateFilling).copyWith();
   }
 }

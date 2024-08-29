@@ -14,8 +14,9 @@ class FileService {
     return _picker.pickMultiImage();
   }
 
-  Future<List<String>> uploadImages(List<XFile> tempImages, Game game) async {
-    List<String> urls = [];
+  Future<List<Screenshot>> uploadImages(
+      List<XFile> tempImages, Game game) async {
+    List<Screenshot> screenshots = [];
     for (var image in tempImages) {
       // Removing the dashes  in the UUID to avoid Parse errors
       var uuid = const Uuid().v1().replaceAll('-', '');
@@ -29,8 +30,21 @@ class FileService {
       if (!result.success) {
         throw Exception(result.error!.message);
       }
-      urls.add(result.results![0].url!);
+
+      final file = ParseObject('Screenshots')
+        ..set('url', result.results![0].url!)
+        ..set('Game', ParseObject('Game')..objectId = game.id);
+      result = await file.save();
+      if (!result.success) {
+        throw Exception(result.error!.message);
+      }
+      screenshots.add(
+        Screenshot(
+          id: result.results!.first['objectId'],
+          url: result.results!.first['url'],
+        ),
+      );
     }
-    return urls;
+    return screenshots;
   }
 }
