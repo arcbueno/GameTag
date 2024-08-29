@@ -60,6 +60,7 @@ class LoginViewModel {
     state.value = SignupFormState(isLoading: true);
     var error = validateRegister(username, email, password, confirmPassword);
     if (error != null) {
+      state.value = SignupFormState();
       return error;
     }
 
