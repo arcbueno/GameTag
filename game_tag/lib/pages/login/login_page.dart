@@ -107,14 +107,16 @@ class _LoginPageState extends State<LoginPage> {
           usernameController.text, passwordController.text);
     } else {
       error = await viewmodel.register(
-          usernameController.text,
-          emailController.text,
-          passwordController.text,
-          confirmPasswordController.text);
+        usernameController.text,
+        emailController.text,
+        passwordController.text,
+        confirmPasswordController.text,
+      );
     }
 
     formKey.currentState?.reset();
     if (error != null && context.mounted) {
+      _clearPasswords();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error),
@@ -137,6 +139,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     }
+
     viewmodel.onBackToLogin();
   }
 
